@@ -1,0 +1,22 @@
+{
+  "name": "backend-tech-test",
+  "version": "1.0.0",
+  "description": "Hi! Welcome to the Skedulo backend tech project. Here you will be creating an optimal schedule for Sally Salamander at a music festival, ensuring that she can see her favourite shows!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Skedulo/backend-tech-test.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Skedulo/backend-tech-test/issues"
+  },
+  "homepage": "https://github.com/Skedulo/backend-tech-test#readme",
+  "dependencies": {
+    "esm": "^3.2.25"
+  }
+}
