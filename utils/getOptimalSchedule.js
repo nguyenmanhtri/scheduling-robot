@@ -11,18 +11,20 @@ export const getOptimalSchedule = (schedule) => {
 
   // Sort the timeline
   const orderedTimestamps = Object.keys(timeline).sort();
-  const orderedTimeline = orderedTimestamps.reduce((obj, key) => {
+  let previousBand;
+  const orderedTimeline = orderedTimestamps.reduce((obj, key, idx) => {
+    // Check to see if the current playing band is still the highest priority
+    if (timeline[key][0] === previousBand) {
+      orderedTimestamps[idx] = null;
+      return obj;
+    }
+
     obj[key] = timeline[key];
+    previousBand = timeline[key][0];
     return obj;
   }, {});
 
-  // Create optimal schedule
-  const lastTs = orderedTimestamps.pop();
-  return orderedTimestamps.map((ts, idx) => ({
-    band: orderedTimeline[ts].find(el => typeof el === 'string'),
-    start: ts,
-    finish: orderedTimestamps[idx + 1] || lastTs,
-  }));
+  return parseTimeline(orderedTimestamps.filter(ts => ts), orderedTimeline);
 };
 
 // Get current performances and sort by priority
@@ -37,3 +39,12 @@ const getCurrentPerformances = (time, schedule) => {
   })
   return curPerformances;
 };
+
+const parseTimeline = (timestamps, timeline) => {
+  const lastTs = timestamps.pop();
+  return timestamps.map((ts, idx) => ({
+    band: timeline[ts].find(el => typeof el === 'string'),
+    start: ts,
+    finish: timestamps[idx + 1] || lastTs,
+  }));
+}
