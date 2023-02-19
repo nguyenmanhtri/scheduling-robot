@@ -20,5 +20,8 @@
   "homepage": "https://github.com/Skedulo/backend-tech-test#readme",
   "dependencies": {
     "esm": "^3.2.25"
+  },
+  "devDependencies": {
+    "eslint": "^8.34.0"
   }
 }
