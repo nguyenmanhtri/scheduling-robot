@@ -1,6 +1,6 @@
 import { readFile, writeFile } from 'fs';
 
-import { getOptimalSchedule } from './utils/getOptimalSchedule';
+import { getOptimalSchedule } from './src/getOptimalSchedule';
 
 // eslint-disable-next-line no-undef
 const fileName = process.argv[2].replace('.json', '');

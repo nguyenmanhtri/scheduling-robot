@@ -4,8 +4,8 @@
   "description": "Hi! Welcome to the Skedulo backend tech project. Here you will be creating an optimal schedule for Sally Salamander at a music festival, ensuring that she can see her favourite shows!",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js example.json",
+    "test": "node index.js ./examples/example.json",
+    "start": "node index.js",
     "verify": "backend/music-schedule/verifier/verify-music.sh index.js node"
   },
   "repository": {
