@@ -20,4 +20,74 @@ The program has 2 main parts:
 I chose JavaScript because...
 
 # Assumptions and Tradeoffs
-1.
+1. Our server's in-memory storage is quite big, so space complexity is not a problem
+2.
+
+# Coding Approach
+0. There are 2 variables that we need to consider, priority and time
+```
+[
+  {
+    "band" : "Soundgarden",
+    "start" : "1993-05-25T02:00:00Z",
+    "finish" : "1993-05-25T02:50:00Z",
+    "priority" : 5
+  },
+  {
+    "band" : "Pearl Jam",
+    "start" : "1993-05-25T02:15:00Z",
+    "finish" : "1993-05-25T02:35:00Z",
+    "priority" : 9
+  }
+]
+```
+1. Because at any given time, Sally wants to attend to best performance (highest priority) possible, we sort the performance object in the order of descending priority
+```
+[
+  {
+    "band" : "Pearl Jam",
+    "start" : "1993-05-25T02:15:00Z",
+    "finish" : "1993-05-25T02:35:00Z",
+    "priority" : 9
+  },
+  {
+    "band" : "Soundgarden",
+    "start" : "1993-05-25T02:00:00Z",
+    "finish" : "1993-05-25T02:50:00Z",
+    "priority" : 5
+  }
+]
+```
+2. Then we create a ascending timeline, which consists of every timestamp. Each timestamp will have the info of every _playing or finishing_ band already sorted by priority
+```
+{
+  "1993-05-25T02:00:00Z": ["Soundgarden"],
+  "1993-05-25T02:15:00Z": ["Pearl Jam", "Soundgarden"],
+  "1993-05-25T02:35:00Z": [["Pearl Jam", "finish"], "Soundgarden"],
+  "1993-05-25T02:50:00Z": [["Soundgarden", "finish"]]
+}
+```
+3. The final step is to create our optimal schedule. We do this by going through our timeline, creating a joining-time-window object for every timestamp, with the start time being that timestamp and the finish time being the next timestamp. We skip the last timestamp because this timestamp will always contain finishing band.
+```
+[
+  {
+    "band" : "Soundgarden",
+    "start" : "1993-05-25T02:00:00Z",
+    "finish" : "1993-05-25T02:15:00Z"
+  },
+  {
+    "band" : "Pearl Jam",
+    "start" : "1993-05-25T02:15:00Z",
+    "finish" : "1993-05-25T02:35:00Z"
+  },
+  {
+    "band" : "Soundgarden",
+    "start" : "1993-05-25T02:35:00Z",
+    "finish" : "1993-05-25T02:50:00Z"
+  }
+]
+```
+
+## Some Considerations
+1. When considering the current active bands, our program will also see if that timestamp is the finish timestamp of any given band and mark it
+2. In cases where there is a gap between 2 performances, our program will detect if the current timestamp has a finishing band and no other current playing bands and jump to the next closest performance

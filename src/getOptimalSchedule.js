@@ -2,13 +2,11 @@ export const getOptimalSchedule = (schedule) => {
   // Sort performances by highest priority first
   schedule.sort((a, b) => b.priority - a.priority);
 
-  const timeline = {};
-  schedule.forEach(performance => {
-    timeline[performance.start] = getCurrentPerformances(performance.startObj, schedule);
-    timeline[performance.finish] = getCurrentPerformances(performance.finishObj, schedule);
-  });
+  const timeline = getTimeline(schedule);
+  return parseTimeline(...getAscendingTimeline(timeline));
+};
 
-  // Sort the timeline
+const getAscendingTimeline = (timeline) => {
   const orderedTimestamps = Object.keys(timeline).sort();
   let previousBand;
   const orderedTimeline = orderedTimestamps.reduce((obj, key, idx) => {
@@ -22,11 +20,18 @@ export const getOptimalSchedule = (schedule) => {
     previousBand = timeline[key][0];
     return obj;
   }, {});
+  return [orderedTimestamps, orderedTimeline];
+}
 
-  return parseTimeline(orderedTimestamps, orderedTimeline);
+const getTimeline = (schedule) => {
+  const timeline = {};
+  schedule.forEach(performance => {
+    timeline[performance.start] = getCurrentPerformances(performance.startObj, schedule);
+    timeline[performance.finish] = getCurrentPerformances(performance.finishObj, schedule);
+  });
+  return timeline;
 };
 
-// Get current performances and sort by priority
 const getCurrentPerformances = (time, schedule) => {
   const curPerformances = [];
   schedule.forEach(performance => {
@@ -39,6 +44,7 @@ const getCurrentPerformances = (time, schedule) => {
   return curPerformances;
 };
 
+// Create optimal schedule object
 const parseTimeline = (timestamps, timeline) => {
   const validTimestamps = timestamps.filter(ts => ts);
   const lastTs = validTimestamps.pop();
