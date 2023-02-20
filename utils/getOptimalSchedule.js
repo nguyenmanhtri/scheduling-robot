@@ -4,7 +4,6 @@ export const getOptimalSchedule = (schedule) => {
 
   const timeline = {};
   schedule.forEach(performance => {
-    if (timeline[performance.start] || timeline[performance.finish]) return;
     timeline[performance.start] = getCurrentPerformances(performance.startObj, schedule);
     timeline[performance.finish] = getCurrentPerformances(performance.finishObj, schedule);
   });
@@ -24,7 +23,7 @@ export const getOptimalSchedule = (schedule) => {
     return obj;
   }, {});
 
-  return parseTimeline(orderedTimestamps.filter(ts => ts), orderedTimeline);
+  return parseTimeline(orderedTimestamps, orderedTimeline);
 };
 
 // Get current performances and sort by priority
@@ -41,10 +40,18 @@ const getCurrentPerformances = (time, schedule) => {
 };
 
 const parseTimeline = (timestamps, timeline) => {
-  const lastTs = timestamps.pop();
-  return timestamps.map((ts, idx) => ({
-    band: timeline[ts].find(el => typeof el === 'string'),
-    start: ts,
-    finish: timestamps[idx + 1] || lastTs,
-  }));
+  const validTimestamps = timestamps.filter(ts => ts);
+  const lastTs = validTimestamps.pop();
+
+  const optimalSchedule = [];
+  for (let i = 0; i < validTimestamps.length; i++) {
+    const band = timeline[validTimestamps[i]].find(el => typeof el === 'string');
+    if (!band) continue;
+    optimalSchedule.push({
+      band,
+      start: validTimestamps[i],
+      finish: validTimestamps[i + 1] || lastTs,
+    })
+  }
+  return optimalSchedule;
 }
