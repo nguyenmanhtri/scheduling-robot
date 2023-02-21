@@ -1,12 +1,12 @@
 # Forewords
-This is my proposed solution to [Skedulo's test](https://github.com/Skedulo/backend-tech-test), which is to create an optimal schedule for Sally who is going to a music festival with multiple bands playing.
+This is my proposed solution to <a href="https://github.com/Skedulo/backend-tech-test" target="_blank">Skedulo's test</a>, which is to create an optimal schedule for Sally who is going to a music festival with multiple bands playing.
 # Usage
 1. If you have already had Node.js on your machine, you can skip this step. Otherwise, you can install Node.js from their homepage https://nodejs.org/en/
 2. Run the `build.sh` script to install the necessary dependencies
 ```
 ./scripts/build.sh
 ```
-3. Run the `run.sh` script to create an optimal schedule from the input. You will also have to provide an input schedule to the program. In our case, the example inputs are in the folder `./examples`
+3. Run the `run.sh` script to create a json file containing the optimal schedule. You will also have to provide an input schedule to the program. In our case, the example inputs and outputs are in the folder `./examples`
 ```
 ./scripts/run.sh ./examples/example.json
 ```
