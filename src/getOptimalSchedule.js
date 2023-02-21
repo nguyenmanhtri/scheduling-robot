@@ -24,8 +24,10 @@ const getAscendingTimeline = (timeline) => {
 }
 
 const getTimeline = (schedule) => {
+  // TODO: Use Map or Array to store timeline for better performance
   const timeline = {};
   schedule.forEach(performance => {
+    // TODO: Reduce the number of times getCurrentPerformances is called
     timeline[performance.start] = getCurrentPerformances(performance.startObj, schedule);
     timeline[performance.finish] = getCurrentPerformances(performance.finishObj, schedule);
   });

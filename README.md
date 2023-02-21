@@ -1,29 +1,70 @@
-1. Install node
-2. `chmod -R +x ./scripts/`
-3. `chmod +x ./backend/music-schedule/verifier/verify-music.sh`
+# Forewords
+This is my proposed solution to [Skedulo's test](https://github.com/Skedulo/backend-tech-test), which is to create an optimal schedule for Sally who is going to a music festival with multiple bands playing.
+# Usage
+1. If you have already had Node.js on your machine, you can skip this step. Otherwise, you can install Node.js from their homepage https://nodejs.org/en/
+2. Run the `build.sh` script to install the necessary dependencies
+```
+./scripts/build.sh
+```
+3. Run the `run.sh` script to create an optimal schedule from the input. You will also have to provide an input schedule to the program. In our case, the example inputs are in the folder `./examples`
+```
+./scripts/run.sh ./examples/example.json
+```
+To verify our solution with the provided verifier
+```
+npm run verify
+```
+Expected output:
+```
+> backend-tech-test@1.0.0 verify
+> backend/music-schedule/verifier/verify-music.sh index.js node
 
-1. How you model your program?
-2. Language of choice: JavaScript. Why?
-3. Coding approach?
-- Assumptions made?
-- Tradeoffs?
-4. What testing strategy you apply to ensure that any solution has future maintainability?
-- Break the challenge into smaller functional tasks
-- Each function will handle an atomic task, which can be easily tested and maintained
-5. A readme that discusses your approach, any concessions you made, any self imposed constraints, anything that you think would be valuable for the reviewer to know.
+Testing executable 'index.js' using 'node'
 
-# Program Modelling
+Testing /your/project/path/backend/music-schedule/verifier/example.json...
+  OK
+
+Testing /your/project/path/backend/music-schedule/verifier/overlapping.json...
+  OK
+
+Testing /your/project/path/backend/music-schedule/verifier/time-priority.json...
+  OK
+
+Testing /your/project/path/backend/music-schedule/verifier/minutes-resolution.json...
+  OK
+
+Testing /your/project/path/backend/music-schedule/verifier/seconds-resolution.json...
+  OK
+
+Testing /your/project/path/backend/music-schedule/verifier/timezone.json...
+  OK
+
+Finished verifying
+```
+# Discussion
+1. [Assumptions and tradeoffs](#assumptions-and-tradeoffs)
+2. [How I model my program](#how-i-model-my-program)
+3. [Testing strategy](#testing-strategy)
+4. [Coding approach](#coding-approach)
+5. [Possible improvements](#possible-improvements)
+
+## Assumptions and tradeoffs
+1. Our server's in-memory storage is quite big, so space complexity is not a problem
+2. Realistically, the number of bands at a festival is often not very big, maybe 10 at max. In this case, with every band, we have 2 timestamps, so that gives us 20 data points at worst. With this relatively small number of data points, time complexity will not be a problem either
+3. At scale, we only have to worry about large number of I/O operations. So using Node.js here maybe an appropriate approach.
+
+## How I model my program
 The program has 2 main parts:
 1. `index.js` is the program's entry point, which reads the input and outputs the optimal schedule for Sally
 2. `./src/getOptimalSchedule.js` is where we handle all the lower-level logic for creating an optimal schedule.
 
-I chose JavaScript because...
+## Testing strategy
+Due to the time constraint, I was only able to perform the _Acceptance Test_, which is to produce the correct output for the user. Some considerations for the future:
+- Unit test: The program is already broken down into small functions. Each function will handle an atomic task, which can be easily tested and maintained
+- Integration test
+- Performance test.
 
-# Assumptions and Tradeoffs
-1. Our server's in-memory storage is quite big, so space complexity is not a problem
-2.
-
-# Coding Approach
+## Coding approach
 0. There are 2 variables that we need to consider, priority and time
 ```
 [
@@ -58,7 +99,7 @@ I chose JavaScript because...
   }
 ]
 ```
-2. Then we create a ascending timeline, which consists of every timestamp. Each timestamp will have the info of every _playing or finishing_ band already sorted by priority
+2. Then we create an ascending timeline, which consists of every timestamp. Each timestamp will have the info of every _playing or finishing_ band already sorted by priority
 ```
 {
   "1993-05-25T02:00:00Z": ["Soundgarden"],
@@ -88,6 +129,10 @@ I chose JavaScript because...
 ]
 ```
 
-## Some Considerations
-1. When considering the current active bands, our program will also see if that timestamp is the finish timestamp of any given band and mark it
-2. In cases where there is a gap between 2 performances, our program will detect if the current timestamp has a finishing band and no other current playing bands and jump to the next closest performance
+- When checking the current active bands, our program will also see if that timestamp is the finish timestamp of any given band and remember it
+- In cases where there is a gap between 2 performances, our program will detect if the current timestamp has a finishing band and no other current playing bands and jump to the next closest performance.
+
+## Possible improvements
+- Set up a performance test to see how our program handle large number of I/O processes
+- Some array operations in the program could be improved
+- If we have more inputs from the user such as _all the performances are non-overlapping_ or _some performances are must-see_, we can implement different algorithms to speed up our process.
