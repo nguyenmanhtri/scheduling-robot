@@ -16,7 +16,7 @@ readFile(`${fileName}.json`, utf8Encoding, (err, data) => {
   }));
   const optimalSchedule = getOptimalSchedule(parsedData);
 
-  writeFile(optimalFile, JSON.stringify(optimalSchedule), (err) => {
+  writeFile(optimalFile, JSON.stringify(optimalSchedule, null, '  '), (err) => {
     if (err) throw err;
   })
 });

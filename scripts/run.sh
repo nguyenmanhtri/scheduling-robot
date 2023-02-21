@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-node index.js ./example.json
+node index.js $1
